@@ -7,17 +7,18 @@
     <title>do zrobiebia</title>
 </head>
 <body>
-    <div id="baner"><h1>lista rzeczy do zrobienia</h1></div>
+    <div id="baner"><h1>To do list</h1></div>
     <div id="dodawanie">
         <form method="post">
-            dodaj zadanie<br>
+            Task:<br>
             <input type="text" name="wprowadz" ><br>
-            usun wybrany numer<br>
+            choose a number to delete or modify<br>
             <input type="number" name="usuwanie"><br>
             <select name="wybor">
-                <option value="puste">wybierz działanie</option>
-                <option value="us">usuwanie</option>
-                <option value="dod">dodawanie</option>
+                <option value="puste">choose action</option>
+                <option value="us">remove</option>
+                <option value="dod">add</option>
+                <option value="edytuj">modify</option>
             </select>
             <button type="submit" value="dodaj"></button></form>
     </div>
@@ -34,39 +35,41 @@
                 print_r($plik);
                 echo "</pre>";
             }
-            switch($akcja){
-                case "us":
-                    if(!empty($_POST["usuwanie"])){
-                        $n=$_POST["usuwanie"];
-                        $tekst=$plik[$n];
-                        $content=file_get_contents("todolist.txt");
-                        $content=str_replace($tekst,"",$content);
-                        file_put_contents("todolist.txt",$content);
-                    };
-                    break;
-                case "dod":
-                    if(!empty($_POST["wprowadz"])){
-                        $a=$_POST["wprowadz"];
-                        $b=$a.''."\n";
-                        fwrite($file,$b);
-                    }
-                    break;
+            if(!empty($_POST["wybor"])){
+                switch($akcja){
+                    case "us":
+                        if(!empty($_POST["usuwanie"])){
+                            $n=$_POST["usuwanie"];
+                            $tekst=$plik[$n];
+                            $content=file_get_contents("todolist.txt");
+                            $content=str_replace($tekst,"",$content);
+                            file_put_contents("todolist.txt",$content);
+                        };
+                        break;
+                    case "dod":
+                        if(!empty($_POST["wprowadz"])){
+                            $a=$_POST["wprowadz"];
+                            $b=$a.''."\n";
+                            fwrite($file,$b);
+                        }
+                        break;
+                        case "edytuj":
+                            if(!empty($_POST["wprowadz"])&&!empty($_POST["usuwanie"])){
+                                $n=$_POST["usuwanie"];
+                                $tekst=$plik[$n];
+                                $nowe=$_POST["wprowadz"].''."\n";
+                                $content=file_get_contents("todolist.txt");
+                                $content=str_replace($tekst,$nowe,$content);
+                                file_put_contents("todolist.txt",$content);
+                            }
+                            break;
+                        
+
+                }
             }
 
 
         ?>
     </div>
-    <?php
-    /*if(!empty($_POST["wprowadz"])&empty($_POST["usuwanie"])){
-        $a=$_POST["wprowadz"];
-        $b=$a.''."\n";
-        fwrite($file,$b);
-    }
-    else if(!empty($_post["usuwanie"])&&empty($_POST["wprowadz"])){
-        $n=$_POST["usuwanie"];
-        echo $n;
-        
-    }*/
-?>
 </body>
 </html>
